@@ -1,25 +1,21 @@
 #Created by Zach Huenink
-import os.path as os
+import os
 from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import EasyMP3 as MP3
 
 #Returns a list of songs
-#def getSongs(location):
-	
-#Main method
-def fixerMain():
+def getSongs():
 
-	filePath = os.join(input("Please enter the location of your songs. "))
+	filePath = os.path.normpath(input("Please enter the location of your songs. "))
 
-	#try:
-	with open(filePath) as songFolder:
-		songs = songFolder.read()
-		print(songs)
-	songFolder.close()
-	#except IOError:
-	#	print("Invalid file path!")
+	if(os.path.isdir(filePath)):
+		getSongObjects(filePath)
+	else:
+		print("Not an existing directory!")
 
-	print("----------------------\n" + filePath)
-	#getSongs()
+def getSongObjects(filePath):
 
-fixerMain()
+	for subdir, dirs, files in os.walk(filePath):
+		for file in files:
+		
+getSongs()
