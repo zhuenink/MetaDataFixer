@@ -1,22 +1,37 @@
 #Created by Zach Huenink
-#Test Commit
-import os
+
+import os as os
+import glob as glob
 from mutagen.easyid3 import EasyID3
-from mutagen.mp3 import EasyMP3 as MP3
 
 #Returns a list of songs
 def getSongs():
 
-	filePath = os.path.normpath(input("Please enter the location of your songs. "))
+	filePath = raw_input("Please enter the location of your songs. ")
 
-	if(os.path.isdir(filePath)):
-		getSongObjects(filePath)
+	if(os.path.exists(filePath)):
+
+		songList = []
+		fileContents = glob.glob(filePath + '/*.mp3')
+
+		for file in fileContents:
+			audio = EasyID3(file)
+			audio["Genre"] = u"House"
+			audio.save()
+			songList.append(file)
+
+		return songList
+
+		print ("Is a valid directory!")
 	else:
-		print("Not an existing directory!")
+		print ("Not an existing directory!")
 
-def getSongObjects(filePath):
 
-	for subdir, dirs, files in os.walk(filePath):
-		for file in files:
-		
-getSongs()
+def metaMain():
+	print ("------------------------Metadata Fixer running---------------------")
+	y = getSongs()
+
+	for song in y:
+		print(song)
+
+metaMain()
