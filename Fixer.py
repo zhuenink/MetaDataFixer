@@ -14,7 +14,6 @@ def alterSongs(songList = [], genreDict = {}):
 
 		return None
 	else:
-		print(songList)
 		for file in songList:
 
 			audio = MP3(file, ID3=EasyID3)
@@ -53,13 +52,12 @@ def getSongs():
 def metaDataSetUp():
 	print ("------------------------Metadata Fixer running---------------------")
 
-	try:
-		numGenres = int(raw_input("How many different genres do you want to input? (Up to 9) - "))
-		is_number = True
-	except:
-		is_number = False
+	numGenres = raw_input("How many different genres do you want to input? (Up to 9) - ")
+
+	is_number = isValidNumb(numGenres)
 
 	if(is_number):
+		numGenres = int(numGenres)
 		Genres = dict.fromkeys(range(1, numGenres + 1), '')
 		for key in Genres.keys():
 			Genres[key] = str(raw_input("Please enter a genre - "))
@@ -69,5 +67,16 @@ def metaDataSetUp():
 
 	else:
 		print("You didn't enter a valid number!")
+
+
+#----------------------Helper Functions----------------------------------------
+def isValidNumb(inpt):
+	try:
+		int(inpt)
+		is_number = True
+	except:
+		is_number = False
+
+	return is_number
 
 metaDataSetUp()
