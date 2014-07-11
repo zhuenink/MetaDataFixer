@@ -2,27 +2,39 @@
 
 import os as os
 import glob as glob
+from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3
 
 #Changes the Song's metadata based on user's input
 def alterSongs(songList = [], genreDict = {}):
 
 	if songList is None:
+
 		print("There are no mp3's!")
+
 		return None
 	else:
 		print(songList)
-		print(genreDict)
-		return None
-		"""
 		for file in songList:
-			audio = EasyID3(file)
-			audio["Genre"] = u"House"
-			audio.save()
-			songList.append(file)
-		return songList
-		"""
 
+			audio = MP3(file, ID3=EasyID3)
+
+			print("------------------------------------------------------------")
+			print(genreDict)
+			print(audio['title'], audio['genre'])
+
+			newGenre = int(raw_input("Please the number that corresponds with the correct genre. - "))
+			
+			if(newGenre in genreDict.keys()):
+				audio['genre'] = genreDict[newGenre]
+				audio.save()
+			else:
+				print("Genre not written!")
+
+			print(audio['title'], audio['genre'])
+
+		print("--------------Done altering songs!------------------------------")
+		return None
 
 #Gathers a list of songs and passes it off to AlterSongs
 def getSongs():
@@ -51,7 +63,6 @@ def metaDataSetUp():
 		Genres = dict.fromkeys(range(1, numGenres + 1), '')
 		for key in Genres.keys():
 			Genres[key] = str(raw_input("Please enter a genre - "))
-		print(Genres)
 
 		songList = getSongs()
 		alterSongs(songList, Genres)
