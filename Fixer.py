@@ -7,6 +7,7 @@ from mutagen.easyid3 import EasyID3
 
 #Changes the Song's metadata based on user's input
 def alterSongs(songList = [], genreDict = {}):
+	delim = '------------------------------------------------------------'
 
 	if songList is None:
 
@@ -18,7 +19,7 @@ def alterSongs(songList = [], genreDict = {}):
 
 			audio = MP3(file, ID3=EasyID3)
 
-			print("------------------------------------------------------------")
+			print(delim)
 			print(genreDict)
 			print(audio['title'], audio['genre'])
 
@@ -32,9 +33,8 @@ def alterSongs(songList = [], genreDict = {}):
 				print("Genre not written!")
 
 			print(audio['title'], audio['genre'])
-
-		print("--------------Done altering songs!------------------------------")
-		return None
+        print(delim)
+        print("Done altering songs!")
 
 #Gathers a list of songs and passes it off to AlterSongs
 def getSongs():
@@ -50,7 +50,7 @@ def getSongs():
 		return None
 
 
-def metaDataSetUp():
+def main():
 	print ("------------------------Metadata Fixer running---------------------")
 
 	numGenres = raw_input("How many different genres do you want to input? (Up to 9) - ")
@@ -80,4 +80,4 @@ def isValidNumb(inpt):
 
 	return is_number
 
-metaDataSetUp()
+main()
