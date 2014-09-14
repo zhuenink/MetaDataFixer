@@ -2,6 +2,7 @@
 
 import os as os
 import glob as glob
+from mutagen import mutagen
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3
 
@@ -12,8 +13,8 @@ def alterSongs(songList = [], genreDict = {}):
 	if songList is None:
 
 		print("There are no mp3's!")
-
 		return None
+
 	else:
 		for file in songList:
 
@@ -21,7 +22,10 @@ def alterSongs(songList = [], genreDict = {}):
 
 			print(delim)
 			print(genreDict)
-			print(audio['title'], audio['genre'])
+			if(audio['genre'] == None):
+				print(audio['title'], audio['artist'])
+			else:
+				print(audio['title'], audio['artist'], audio['genre'])
 
 			newGenre = int(raw_input("Please the number that corresponds with the" \
 			" correct genre. - "))
@@ -42,12 +46,10 @@ def getSongs():
 	filePath = raw_input("Please enter the location of your songs. ")
 
 	if(os.path.exists(filePath)):
-		print ("Is a valid directory!")
 		fileContents = glob.glob(filePath + '/*.mp3')
 		return fileContents
 	else:
 		print ("Not an existing directory!")
-		return None
 
 
 def main():
@@ -55,9 +57,7 @@ def main():
 
 	numGenres = raw_input("How many different genres do you want to input? (Up to 9) - ")
 
-	is_number = isValidNumb(numGenres)
-
-	if(is_number):
+	if(isValidNumb(numGenres)):
 		numGenres = int(numGenres)
 		Genres = dict.fromkeys(range(1, numGenres + 1), '')
 		for key in Genres.keys():
