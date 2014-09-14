@@ -22,10 +22,10 @@ def alterSongs(songList = [], genreDict = {}):
 
 			print(delim)
 			print(genreDict)
-			if(audio['genre'] == None):
-				print(audio['title'], audio['artist'])
-			else:
+			if('genre' in audio.keys()):
 				print(audio['title'], audio['artist'], audio['genre'])
+			else:
+				print(audio['title'], audio['artist'])
 
 			newGenre = int(raw_input("Please the number that corresponds with the" \
 			" correct genre. - "))
