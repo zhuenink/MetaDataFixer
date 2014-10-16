@@ -1,61 +1,45 @@
-#Created by Zach Huenink
-
-import os as os
-import glob as glob
+# I was looking back at the old version and good lord, I might be retarded.
+# Not to say that this is way better.
+import os
+import glob
 from mutagen import mutagen
-from mutagen.mp3 import MP3
-from mutagen.easyid3 import EasyID3
+from mutagen.mp3 import MP3 
+from mutagen.easyid3 import EasyID3 
 
-#Changes the Song's metadata based on user's input
-def alterSongs(songList = [], genreDict = {}):
-	delim = '------------------------------------------------------------'
+# Config
+# testMode - Change to false to accept user inputted location and genres
+# testSongLocation - Change to an already established directory of songs
+# testGenreList - Change to whatever genres you want to test with
+testMode = False
+testSongLocation = "CHANGE THIS HERE STRING"
+testGenreList = {'1': 'Trance', '2': 'House', '3': 'Electro', '4': 'Trap', '5': 'Dubstep'}
+delim = '------------------------------------------------------------'
 
-	if songList is None:
+# In this case just change to intended file type
+# For example '/*.wav', '/*.aiff'
+songFileType = '/*.mp3'
 
-		print("There are no mp3's!")
-		return None
 
+# Returns a list of files with specified filetype
+def getSongs(folderPath):
+	if(os.path.exists(folderPath)):
+		folderContents = glob.glob(folderPath + songFileType)
+		return folderContents
 	else:
-		for file in songList:
+		print("Not an existing directory!")
 
-			audio = MP3(file, ID3=EasyID3)
-
-			print(delim)
-			print(genreDict)
-			if('genre' in audio.keys()):
-				print(audio['title'], audio['artist'], audio['genre'])
-			else:
-				print(audio['title'], audio['artist'])
-
-			newGenre = int(raw_input("Please the number that corresponds with the" \
-			" correct genre. - "))
-			
-			if(newGenre in genreDict.keys()):
-				audio['genre'] = genreDict[newGenre]
-				audio.save()
-			else:
-				print("Genre not written!")
-
-			print(audio['title'], audio['genre'])
-        print(delim)
-        print("Done altering songs!")
-
-#Gathers a list of songs and passes it off to AlterSongs
-def getSongs():
-
-	filePath = raw_input("Please enter the location of your songs. ")
-
-	if(os.path.exists(filePath)):
-		fileContents = glob.glob(filePath + '/*.mp3')
-		return fileContents
+# Determines which mode to use, test or normal
+def fixerMode():
+	if(testMode):
+		songList = getSongs(testSongLocation)
+		alterSongs(songList, testGenreList)
 	else:
-		print ("Not an existing directory!")
+		fixerInput()
 
-
-def main():
-	print ("------------------------Metadata Fixer running---------------------")
-
-	numGenres = raw_input("How many different genres do you want to input? (Up to 9) - ")
+# Gets input from the user for the song folder, and genres
+def fixerInput():
+	folderPath = raw_input("Please enter the location of your songs. ")
+	numGenres = raw_input("Enter the number of genres (up to 9). ")
 
 	if(isValidNumb(numGenres)):
 		numGenres = int(numGenres)
@@ -63,14 +47,45 @@ def main():
 		for key in Genres.keys():
 			Genres[key] = str(raw_input("Please enter a genre - "))
 
-		songList = getSongs()
-		alterSongs(songList, Genres)
+	songList = getSongs(folderPath)
+	alterSongs(songList, Genres)
 
+
+# The meat of it all. I put a lot of print statements in because
+# I like things nicely formatted on the command line and I like
+# presenting myself with relevant information so I don't forget.
+def alterSongs(songList = [], genreDict = {}):
+	print(delim)
+
+	if songList is None:
+		print("There are no " + songFileType + "'s!!")
+		return None
 	else:
-		print("You didn't enter a valid number!")
+		for file in songList:
+			audio = MP3(file, ID3=EasyID3)
+			print(genreDict)
 
+			#if('genre' in audio.keys()):
+			#	print(audio['title'], audio['artist'], audio['genre'])
+			#else:
+			#	print(audio['title'], audio['artist'])
+			print(file, audio['title'], audio['genre'])
+			newGenre = raw_input("Please enter the number that corresponds with the" \
+				" correct genre. - ")
 
-#----------------------Helper Functions----------------------------------------
+			if(newGenre in genreDict.keys()):
+				audio['genre'] = genreDict[newGenre]
+				audio.save()
+			else:
+				print("Genre not written!")
+
+			print(audio['title'], audio['genre'])
+		print(delim)
+		print("Done altering songs!")
+
+fixerMode()
+
+#Helper Functions----------------------------------
 def isValidNumb(inpt):
 	try:
 		int(inpt)
@@ -79,5 +94,3 @@ def isValidNumb(inpt):
 		is_number = False
 
 	return is_number
-
-main()
