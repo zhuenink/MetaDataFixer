@@ -1,5 +1,4 @@
-# I was looking back at the old version and good lord, I might be retarded.
-# Not to say that this is way better.
+# Refactored to introduce a test mode.
 import os
 import glob
 from mutagen import mutagen
@@ -11,7 +10,7 @@ from mutagen.easyid3 import EasyID3
 # testSongLocation - Change to an already established directory of songs
 # testGenreList - Change to whatever genres you want to test with
 testMode = False
-testSongLocation = "CHANGE THIS HERE STRING"
+testSongLocation = "Change this string"
 testGenreList = {'1': 'Trance', '2': 'House', '3': 'Electro', '4': 'Trap', '5': 'Dubstep'}
 delim = '------------------------------------------------------------'
 
