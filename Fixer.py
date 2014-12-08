@@ -6,10 +6,12 @@ from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3 
 
 # Config
-# testMode - Change to false to accept user inputted location and genres
+# mode - 0 -- Runs Normally
+# mode - 1 -- Runs Test Mode with prepoulated data
+# mode - 2 -- Runs the keyBPM prepender
 # testSongLocation - Change to an already established directory of songs
 # testGenreList - Change to whatever genres you want to test with
-testMode = False
+mode = 2
 testSongLocation = "Change this string"
 testGenreList = {'1': 'Trance', '2': 'House', '3': 'Electro', '4': 'Trap', '5': 'Dubstep'}
 delim = '------------------------------------------------------------'
@@ -27,13 +29,18 @@ def getSongs(folderPath):
 	else:
 		print("Not an existing directory!")
 
-# Determines which mode to use, test or normal
+# Determines which mode to use
 def fixerMode():
-	if(testMode):
+
+	#Normal
+	if(mode == 0 or 2):
+		fixerInput()
+	#Test
+	elif(mode == 1):
 		songList = getSongs(testSongLocation)
 		alterSongs(songList, testGenreList)
 	else:
-		fixerInput()
+		print("Not Fixing Anything")
 
 # Gets input from the user for the song folder, and genres
 def fixerInput():
@@ -47,7 +54,13 @@ def fixerInput():
 			Genres[key] = str(raw_input("Please enter a genre - "))
 
 	songList = getSongs(folderPath)
-	alterSongs(songList, Genres)
+
+	if(mode == 0):
+		alterSongs(songList, Genres)
+	elif(mode == 2):
+		keyBPMTitleScript(songList)
+	else:
+		print("Not getting the songs yo")
 
 
 # The meat of it all. I put a lot of print statements in because
@@ -82,7 +95,8 @@ def alterSongs(songList = [], genreDict = {}):
 		print(delim)
 		print("Done altering songs!")
 
-fixerMode()
+def keyBPMTitleScript(songList = []):
+	print(songList)
 
 #Helper Functions----------------------------------
 def isValidNumb(inpt):
@@ -91,5 +105,6 @@ def isValidNumb(inpt):
 		is_number = True
 	except:
 		is_number = False
-
 	return is_number
+
+fixerMode()
